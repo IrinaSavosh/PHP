@@ -1,0 +1,38 @@
+#версия синтаксиса
+version: '3'
+
+#в этом блоке мы описываем контейнеры, которые будут запускаться
+services:
+# контейнер с Nginx
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: myapp/nginx
+    container_name: webserver
+    # проброс портов
+    ports:
+      - "80:80"
+    volumes:
+       - ./code:/data/mysite.local
+    networks:
+      - app-networks
+  
+  # контейнер с PHP-FPM, назовем его app
+  app:
+  # если нет секции build, то система будет искать образ в репозиториях
+    build:
+      context: ./fpm
+      dockerfile: Dockerfile
+    image: myapp/php #имя будущего образа
+    container_name: app #имя контейнера после запуска
+    volumes:
+      - ./code:/data/mysite.local
+      # мы можем создать для контейнера внутреннюю сеть
+    networks:
+      - app-networks
+
+#Docker Networks
+networks:
+  app-networks:
+    driver: bridge
