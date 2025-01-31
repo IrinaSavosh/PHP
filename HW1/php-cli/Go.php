@@ -114,3 +114,4 @@ echo "c = $c, d = $d \r\n";
  */
 list($d, $c) = [$c, $d];
 echo "c = $c, d = $d";
+
